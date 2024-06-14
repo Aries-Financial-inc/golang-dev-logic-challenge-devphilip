@@ -1,0 +1,88 @@
+definitions:
+  model.AnalysisResponse:
+    properties:
+      break_even_points:
+        items:
+          type: number
+        type: array
+      max_loss:
+        type: number
+      max_profit:
+        type: number
+      xy_values:
+        items:
+          $ref: '#/definitions/model.XYValue'
+        type: array
+    type: object
+  model.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  model.OptionsContract:
+    properties:
+      ask:
+        type: number
+      bid:
+        type: number
+      expiration_date:
+        type: string
+      long_short:
+        type: string
+      strike_price:
+        type: number
+      type:
+        description: type (call or put), strike_price, bid, ask, expiration_date,
+          long_short
+        type: string
+    type: object
+  model.XYValue:
+    properties:
+      x:
+        type: number
+      "y":
+        type: number
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: philipakpeki@gmail.com
+    name: Philip Akpeki
+    url: http://www.swagger.io/support
+  description: This is an options analysis API.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Options Analysis API
+  version: "1.0"
+paths:
+  /analyze:
+    post:
+      consumes:
+      - application/json
+      description: returns the analysis of a list of options contracts
+      parameters:
+      - description: List of options contracts
+        in: body
+        name: contracts
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/model.OptionsContract'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AnalysisResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: returns options contracts analysis
+      tags:
+      - Options Analysis
+swagger: "2.0"

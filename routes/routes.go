@@ -1,29 +1,14 @@
 package routes
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	. "golang-dev-logic-challenge-devphilip/controllers"
+	_ "golang-dev-logic-challenge-devphilip/docs"
+	. "golang-dev-logic-challenge-devphilip/model"
+	"net/http"
 )
-
-// OptionsContract structure for the request body
-type OptionsContract struct {
-	// Your code here
-}
-
-// AnalysisResult structure for the response body
-type AnalysisResult struct {
-	GraphData       []GraphPoint `json:"graph_data"`
-	MaxProfit       float64      `json:"max_profit"`
-	MaxLoss         float64      `json:"max_loss"`
-	BreakEvenPoints []float64    `json:"break_even_points"`
-}
-
-// GraphPoint structure for X & Y values of the risk & reward graph
-type GraphPoint struct {
-	X float64 `json:"x"`
-	Y float64 `json:"y"`
-}
 
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
@@ -32,14 +17,16 @@ func SetupRouter() *gin.Engine {
 		var contracts []OptionsContract
 
 		if err := c.ShouldBindJSON(&contracts); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, ErrorResponse{Message: err.Error()})
 			return
 		}
 
 		// Your code here
-
-		c.JSON(http.StatusOK, gin.H{"message": "Your code here"})
+		analysisResponse := AnalysisHandler(contracts)
+		c.JSON(http.StatusOK, analysisResponse)
 	})
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	return router
 }
