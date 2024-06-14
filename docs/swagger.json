@@ -1,0 +1,132 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is an options analysis API.",
+        "title": "Options Analysis API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Philip Akpeki",
+            "url": "http://www.swagger.io/support",
+            "email": "philipakpeki@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "paths": {
+        "/analyze": {
+            "post": {
+                "description": "returns the analysis of a list of options contracts",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Options Analysis"
+                ],
+                "summary": "returns options contracts analysis",
+                "parameters": [
+                    {
+                        "description": "List of options contracts",
+                        "name": "contracts",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.OptionsContract"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.AnalysisResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.AnalysisResponse": {
+            "type": "object",
+            "properties": {
+                "break_even_points": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "max_loss": {
+                    "type": "number"
+                },
+                "max_profit": {
+                    "type": "number"
+                },
+                "xy_values": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.XYValue"
+                    }
+                }
+            }
+        },
+        "model.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.OptionsContract": {
+            "type": "object",
+            "properties": {
+                "ask": {
+                    "type": "number"
+                },
+                "bid": {
+                    "type": "number"
+                },
+                "expiration_date": {
+                    "type": "string"
+                },
+                "long_short": {
+                    "type": "string"
+                },
+                "strike_price": {
+                    "type": "number"
+                },
+                "type": {
+                    "description": "type (call or put), strike_price, bid, ask, expiration_date, long_short",
+                    "type": "string"
+                }
+            }
+        },
+        "model.XYValue": {
+            "type": "object",
+            "properties": {
+                "x": {
+                    "type": "number"
+                },
+                "y": {
+                    "type": "number"
+                }
+            }
+        }
+    }
+}
